@@ -6,18 +6,15 @@
 
 class Transform {
 private:
-    Vec2 anchor;
     Vec2 translation;
     Vec2 scale;
     double angle;
 
-    void update_transform_mat(Mat3& mat) const {
+    void calc_transform_mat(Mat3& mat) const {
         mat.set_identity();
-        mat.translate(-anchor.get_x(), -anchor.get_y());
         mat.scale(scale.get_x(), scale.get_y());
         mat.rotate(angle);
         mat.translate(translation.get_x(), translation.get_y());
-        mat.translate(anchor.get_x(), anchor.get_y());
     }
 
 public:
@@ -38,8 +35,8 @@ public:
     }
 
     void apply(const Transform& transform) {
-        rotate_by(transform.angle);
         scale_by(transform.scale.get_x(), transform.scale.get_y());
+        rotate_by(transform.angle);
         translate_by(transform.translation.get_x(), transform.translation.get_y());
     }
 
@@ -47,12 +44,11 @@ public:
         translation = Vec2(0, 0);
         scale = Vec2(1, 1);
         angle = 0;
-        anchor = Vec2(0, 0);
     }
 
     Vec2 apply_to(const Vec2& vec) const {
         Mat3 mat;
-        update_transform_mat(mat);
+        calc_transform_mat(mat);
         double w = mat.get(2, 0) * vec.get_x() + mat.get(2, 1) * vec.get_y() + mat.get(2, 2);
         return {
             (mat.get(0, 0) * vec.get_x() + mat.get(0, 1) * vec.get_y() + mat.get(0, 2)) / w,
@@ -73,14 +69,6 @@ public:
         return angle;
     }
 
-    const Vec2 &getAnchor() const {
-        return anchor;
-    }
-
-    void setAnchor(const Vec2 &anchor) {
-        this->anchor = anchor;
-    }
-
     void setTranslation(const Vec2 &translation) {
 //        TODO
         this->translation = translation;
@@ -90,12 +78,12 @@ public:
         this->scale = scale;
     }
 
-    void setAngle(double angle) {
+    void set_angle(double angle) {
         this->angle = angle;
     }
 
     void set_position(const Vec2 &position) {
-        translation = position - anchor;
+        translation = position;
     }
 };
 

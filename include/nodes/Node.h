@@ -13,6 +13,8 @@ protected:
     Transform world_transform;
     Transform transform;
 
+    Vec2 anchor;
+
     int z_index;
     std::vector<Node*> children;
     Node* parent;
@@ -36,19 +38,13 @@ protected:
           invalid(true){}
 
     void add_child(Node* child, int z_index);
-
     const Vec2 &get_position() const;
-
-    const Vec2 &getScale() const;
-
-    Vec2 get_world_position();
-
+    const Vec2 &get_scale() const;
+    double get_angle() const;
+    const Vec2 & get_world_position();
     void set_position(const Vec2 &position);
-
     void set_scale(const Vec2 &scale);
-
     void set_angle(double angle);
-
     void set_anchor(const Vec2 &anchor);
 };
 

@@ -40,7 +40,7 @@ void Node::set_position(const Vec2 &position) {
     this->transform.set_position(position);
 }
 
-const Vec2 &Node::getScale() const {
+const Vec2& Node::get_scale() const {
     return transform.get_scale();
 }
 
@@ -56,16 +56,19 @@ void Node::invalidate_children() {
     }
 }
 
-Vec2 Node::get_world_position() {
+const Vec2 & Node::get_world_position() {
     return update_world_transform().get_translation();
 }
 
 void Node::set_angle(double angle) {
     invalidate_children();
-    transform.setAngle(angle);
+    transform.set_angle(angle);
+}
+
+double Node::get_angle() const {
+    return transform.getAngle();
 }
 
 void Node::set_anchor(const Vec2 &anchor) {
-    invalidate_children();
-    transform.setAnchor(anchor);
+    this->anchor = anchor;
 }

@@ -16,7 +16,7 @@ private:
             for (int j = 0; j < 3; ++j) {
                 result[i][j] = 0;
                 for (int k = 0; k < 3; ++k) {
-                    result[i][j] += mat[i][k] * other[k][j];
+                    result[i][j] += other[i][k] * mat[k][j];
                 }
             }
         }
