@@ -10,32 +10,31 @@ private:
     Vec2 translation;
     Vec2 scale;
     double angle;
-    Mat3 mat;
+
+    void update_transform_mat(Mat3& mat) const {
+        mat.set_identity();
+        mat.translate(-anchor.get_x(), -anchor.get_y());
+        mat.scale(scale.get_x(), scale.get_y());
+        mat.rotate(angle);
+        mat.translate(translation.get_x(), translation.get_y());
+        mat.translate(anchor.get_x(), anchor.get_y());
+    }
 
 public:
-    Transform() : mat(), translation(0, 0), scale(1, 1), angle(0) {}
+    Transform() : translation(0, 0), scale(1, 1), angle(0) {}
     Transform(const Vec2& translation, const Vec2& scale, double angle) :
-    translation(translation), scale(scale), angle(angle), mat() {}
+    translation(translation), scale(scale), angle(angle) {}
 
     void rotate_by(double new_angle) {
-        mat.translate(-anchor.get_x(), -anchor.get_y());
         this->angle += new_angle;
-        mat.rotate(angle);
-        mat.translate(anchor.get_x(), anchor.get_y());
     }
 
     void scale_by(double sx, double sy) {
-        mat.translate(-anchor.get_x(), -anchor.get_y());
         scale = Vec2::multiply(scale, Vec2(sx, sy));
-        mat.scale(scale.get_x(), scale.get_y());
-        mat.translate(anchor.get_x(), anchor.get_y());
     }
 
     void translate_by(double tx, double ty) {
-        mat.translate(-anchor.get_x(), -anchor.get_y());
         translation += Vec2(tx, ty);
-        mat.translate(translation.get_x(), translation.get_y());
-        mat.translate(anchor.get_x(), anchor.get_y());
     }
 
     void apply(const Transform& transform) {
@@ -45,7 +44,6 @@ public:
     }
 
     void reset() {
-        mat.set_identity();
         translation = Vec2(0, 0);
         scale = Vec2(1, 1);
         angle = 0;
@@ -53,6 +51,8 @@ public:
     }
 
     Vec2 apply_to(const Vec2& vec) const {
+        Mat3 mat;
+        update_transform_mat(mat);
         double w = mat.get(2, 0) * vec.get_x() + mat.get(2, 1) * vec.get_y() + mat.get(2, 2);
         return {
             (mat.get(0, 0) * vec.get_x() + mat.get(0, 1) * vec.get_y() + mat.get(0, 2)) / w,
@@ -87,17 +87,14 @@ public:
     }
 
     void set_scale(const Vec2 &scale) {
-        scale_by(scale.get_x() / this->scale.get_x(), scale.get_y() / this->scale.get_y());
         this->scale = scale;
     }
 
     void setAngle(double angle) {
-        rotate_by(angle-this->angle);
         this->angle = angle;
     }
 
     void set_position(const Vec2 &position) {
-        translate_by(position.get_x() - translation.get_x(), position.get_y() - translation.get_y());
         translation = position - anchor;
     }
 };
