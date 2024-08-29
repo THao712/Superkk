@@ -69,10 +69,10 @@ public:
         renderer = new CircleRender();
     }
     Renderer* get_renderer() override {
-        renderer->a1 = Vec2(-radius / 2, -radius / 2) + anchor;
-        renderer->a2 = Vec2(-radius / 2, radius / 2) + anchor;
-        renderer->a3 = Vec2(radius / 2, radius / 2) + anchor;
-        renderer->a4 = Vec2(radius / 2, -radius / 2) + anchor;
+        renderer->a1 = Vec2(-radius / 2, -radius / 2) - anchor;
+        renderer->a2 = Vec2(-radius / 2, radius / 2) - anchor;
+        renderer->a3 = Vec2(radius / 2, radius / 2) - anchor;
+        renderer->a4 = Vec2(radius / 2, -radius / 2) - anchor;
         renderer->apply_transform(update_world_transform());
         return renderer;
     }
